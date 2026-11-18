@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agents Atlas</title>
+<meta name="description" content="Global student-recruitment agent database: explore by region on a map, or open the master sheet.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230b1220' stroke='%232dd4bf' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23fbbf24'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="locked">
+<header class="top">
+  <a class="brand" href="#/map"><span class="logo"></span><b>Agents</b><span class="dim">Atlas</span></a>
+  <div id="crumbs" class="crumbs"></div>
+  <div class="top-actions">
+    <a class="btn ghost" href="#/progress">Progress</a>
+    <span id="syncpill" class="pill" title="Where your status/notes are saved"></span>
+    <button id="lockBtn" class="btn ghost" title="Lock and forget the key on this device">Lock</button>
+    <button id="themeBtn" class="btn ghost" title="Switch light or dark theme" aria-label="Switch theme">◐</button>
+  </div>
+</header>
+
+<div id="lock" class="lock" hidden>
+  <form id="lockForm" class="lock-card" autocomplete="off">
+    <span class="logo"></span>
+    <h1>Agents Atlas</h1>
+    <p class="dim">Enter the access key to open the data.</p>
+    <input id="lockKey" type="password" placeholder="Access key" autocomplete="off" required>
+    <label class="chk"><input id="lockRemember" type="checkbox" checked> Remember on this device</label>
+    <button id="lockGo" class="btn primary" type="submit">Unlock</button>
+    <p id="lockMsg" class="lock-msg" role="alert"></p>
+  </form>
+</div>
+
+<main id="app">
+  <!-- Landing -->
+  <section id="landing" class="landing view">
+    <div class="landing-inner">
+      <p class="eyebrow">Global student-recruitment agents</p>
+      <h1>Where do you want to look?</h1>
+      <p class="lede" id="landingStats">Loading…</p>
+      <div class="choices">
+        <a class="choice" href="#/map">
+          <svg viewBox="0 0 64 40" class="ci" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 14c4-6 10-8 16-5 3 1 4 5 8 4 4-1 6-5 11-3 5 2 9 8 7 14-2 5-8 5-12 4-5-1-6 3-11 3-7 0-13-5-15-11-1-2-3-3-4-6z"/><circle cx="24" cy="18" r="2.2" fill="currentColor"/><circle cx="43" cy="22" r="3" fill="currentColor"/><circle cx="34" cy="28" r="1.6" fill="currentColor"/></g></svg>
+          <h2>Map</h2>
+          <p>Browse by world region and country. Click a region to open its records, then act on them and export.</p>
+          <span class="go">Open the map →</span>
+        </a>
+      </div>
+      <div class="centre" id="centre" hidden>
+        <div class="cc" id="ccRegions"><h3>Records by region</h3><div class="ccb"></div></div>
+        <div class="cc" id="ccCoverage"><h3>Contact coverage</h3><div class="ccb"></div></div>
+        <div class="cc" id="ccTop"><h3>Top countries</h3><div class="ccb"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Progress -->
+  <section id="progressView" class="progressview view" hidden>
+    <div class="pg-inner">
+      <div class="pg-head"><div><h1>Data progress</h1><p class="dim" id="pgMeta"></p></div>
+        <div class="mrow"><button class="btn" id="pgReload">Reload progress</button><a class="btn primary" href="#/r/Unclassified">Browse unclassified →</a></div></div>
+      <div class="toolbar" id="pgFilters"></div>
+      <div class="kpis" id="pgKpis"></div>
+      <div class="centre" style="margin-top:14px">
+        <div class="cc"><h3>How countries were assigned</h3><div class="ccb" id="pgBasis"></div></div>
+        <div class="cc"><h3>Classified by region</h3><div class="ccb" id="pgRegion"></div></div>
+      </div>
+      <div class="cc" style="margin-top:14px"><h3>By source list</h3><div class="pg-table" id="pgSources"></div></div>
+    </div>
+  </section>
+
+  <!-- Map -->
+  <section id="mapView" class="mapview view" hidden>
+    <aside class="rail" id="rail"></aside>
+    <div class="stage">
+      <div id="mapWrap" class="mapwrap"><svg id="map" role="img" aria-label="World map of agent counts by country"></svg>
+        <div class="legend" id="legend"></div>
+        <div class="maptools"><button class="btn small" id="resetZoom">Reset view</button></div>
+      </div>
+      <div id="tip" class="tip" hidden></div>
+    </div>
+  </section>
+
+  <!-- Records -->
+  <section id="dataView" class="dataview view" hidden>
+    <div class="dv-head">
+      <div class="dv-title"><h1 id="dvTitle"></h1><span id="dvSub" class="dim"></span></div>
+      <div class="dv-chips" id="dvChips"></div>
+    </div>
+    <div class="toolbar">
+      <input id="q" class="search" type="search" placeholder="Search name, email, city, contact, address…" autocomplete="off">
+      <div class="seg" id="typeSeg" role="group" aria-label="Record type"></div>
+      <div class="tb-filters" id="tbFilters"></div>
+      <div class="tb-right">
+        <button class="btn" id="colsBtn">Columns</button>
+        <button class="btn primary" id="exportBtn">Export CSV</button>
+      </div>
+    </div>
+    <div class="selbar" id="selbar" hidden>
+      <b id="selCount"></b>
+      <span class="sel-actions" id="selActions"></span>
+      <button class="btn link" id="selClear">Clear</button>
+    </div>
+    <div class="grid" id="grid">
+      <div class="grid-head" id="gridHead"></div>
+      <div class="grid-body" id="gridBody"><div class="grid-spacer" id="gridSpacer"></div><div class="grid-rows" id="gridRows"></div></div>
+      <div class="grid-empty" id="gridEmpty" hidden>No records match these filters.</div>
+      <div class="grid-loading" id="gridLoading">Loading records…</div>
+    </div>
+    <div class="statusline" id="statusline"></div>
+  </section>
+</main>
+
+<div id="drawer" class="drawer" hidden></div>
+<div id="modal" class="modal" hidden></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="vendor/d3.min.js"></script>
+<script src="vendor/topojson-client.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
