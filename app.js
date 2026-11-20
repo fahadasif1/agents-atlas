@@ -110,15 +110,17 @@ function regionTotals() {
 function show(id) { for (const v of document.querySelectorAll(".view")) v.hidden = v.id !== id; closeDrawer(); }
 function crumbs(parts) { const c = $("#crumbs"); c.innerHTML = "";
   parts.forEach((p, i) => { if (i) c.append(el("span", { class: "sep" }, "›")); c.append(p.href ? el("a", { href: p.href }, p.label) : el("span", { class: "cur" }, p.label)); }); }
+window.__atlas = { el, getJSON, safeUrl, store, fmt, toast: m => toast(m), csvCell: v => csvCell(v) };
 function route() {
   if (!S.manifest) return;
   const h = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
   const [kind, ...rest] = h.split("/"); const name = rest.join("/");
-  if (kind === "progress") { show("progressView"); crumbs([{ label: "Map", href: "#/map" }, { label: "Progress" }]); renderProgress(); }
+  if (kind === "progress") { show("progressView"); crumbs([{ label: "World map", href: "#/map" }, { label: "Progress" }]); renderProgress(); }
+  else if (kind === "uk") { show("ukView"); crumbs([{ label: "UK agents" }]); window.UKMAP.open(); }
   else if (kind === "map") { show("mapView"); crumbs([{ label: "Map" }]); renderMapView(); }
   else if (kind === "r" && name) { openScope({ type: "region", name }); }
   else if (kind === "c" && S.byCountry.has(name)) { openScope({ type: "country", name }); }
-  else { location.replace("#/map"); }
+  else { location.replace("#/uk"); }
 }
 
 /* ---------- progress ---------- */
@@ -255,7 +257,7 @@ async function openScope(scope) {
   const regs = regionTotals(); const reg = isRegion ? regs.find(r => r.name === scope.name) : null; const ctry = !isRegion ? S.byCountry.get(scope.name) : null;
   if (isRegion && !reg) { location.hash = "#/map"; return; }
   const region = isRegion ? scope.name : ctry.region;
-  crumbs([{ label: "Map", href: "#/map" }, isRegion ? { label: scope.name } : { label: region, href: "#/r/" + encodeURIComponent(region) }, ...(isRegion ? [] : [{ label: scope.name }])]);
+  crumbs([{ label: "World map", href: "#/map" }, isRegion ? { label: scope.name } : { label: region, href: "#/r/" + encodeURIComponent(region) }, ...(isRegion ? [] : [{ label: scope.name }])]);
   $("#dvTitle").textContent = scope.name; $("#dvTitle").style.color = REGION_COLOR[region];
   $("#dvSub").textContent = isRegion ? `${reg.countries.length} countries · ${fmt(reg.n)} records` : `${region} · ${fmt(ctry.n)} records`;
   S.cols = store.get("agents.cols." + (isRegion ? "r" : "c"), null) || COLDEFS.filter(c => c.def && !(c.k === "Country" && !isRegion && false)).map(c => c.k);

@@ -9,11 +9,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="vendor/leaflet/MarkerCluster.css">
+<link rel="stylesheet" href="vendor/leaflet/MarkerCluster.Default.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="locked">
 <header class="top">
-  <a class="brand" href="#/map"><span class="logo"></span><b>Agents</b><span class="dim">Atlas</span></a>
+  <a class="brand" href="#/uk"><span class="logo"></span><b>Agents</b><span class="dim">Atlas</span></a>
   <div id="crumbs" class="crumbs"></div>
   <div class="top-actions">
     <a class="btn ghost" href="#/progress">Progress</a>
@@ -73,6 +76,25 @@
     </div>
   </section>
 
+  <!-- UK map -->
+  <section id="ukView" class="ukview view" hidden>
+    <aside class="ukpanel">
+      <form id="ukSearch" class="uk-search" autocomplete="off">
+        <input id="ukQ" type="search" placeholder="Postcode or town, e.g. M1 1AE" aria-label="Search a UK postcode or town">
+        <button class="btn primary" type="submit">Find</button>
+        <button class="btn" type="button" id="ukLocate" title="Use my location">◎</button>
+      </form>
+      <div class="uk-filters">
+        <div class="seg" id="ukType" role="group" aria-label="Record type"><button data-v="all" class="on">All</button><button data-v="agency">Agencies</button><button data-v="individual">People</button></div>
+        <label class="chk"><input type="checkbox" id="ukEmail"> Has email</label>
+      </div>
+      <div class="uk-sum" id="ukSum"></div>
+      <div class="uk-list" id="ukList"></div>
+      <div class="uk-foot"><button class="btn small" id="ukCopy">Copy emails</button><button class="btn small" id="ukCsv">Export these CSV</button></div>
+    </aside>
+    <div class="ukmapwrap"><div id="ukMap"></div></div>
+  </section>
+
   <!-- Map -->
   <section id="mapView" class="mapview view" hidden>
     <aside class="rail" id="rail"></aside>
@@ -121,7 +143,10 @@
 
 <script src="vendor/d3.min.js"></script>
 <script src="vendor/topojson-client.min.js"></script>
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="vendor/leaflet/leaflet.markercluster.js"></script>
 <script src="config.js"></script>
+<script src="ukmap.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
