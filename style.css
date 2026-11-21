@@ -216,12 +216,12 @@ body.locked > header .top-actions, body.locked > main{visibility:hidden}
 .uk-note{color:var(--amber)}
 .uk-acts{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .uk-foot{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--line)}
-.ukmapwrap,#ukMap{height:100%;min-height:0}
-#ukMap{background:var(--bg)}
+.ukmapwrap,.ukmapwrap > div{height:100%;min-height:0}
+.ukmapwrap > div{background:var(--bg)}
 .uk-pin span{display:block;width:18px;height:18px;border-radius:50%;background:var(--rose);border:3px solid #fff;box-shadow:0 0 0 4px rgba(251,113,133,.35)}
 .uk-pop{font:13px var(--sans)}
 .leaflet-container{font-family:var(--sans)}
 @media(max-width:800px){.ukview{grid-template-columns:1fr;grid-template-rows:55vh 1fr}.ukmapwrap{order:-1}.ukpanel{border-right:0;border-top:1px solid var(--line)}}
-#ukMap.dark .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)}
+.ukmapwrap > div.dark .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)}
 .leaflet-control-attribution{font-size:10px}
 .top-actions .btn.on{color:var(--teal);border-color:var(--teal)}

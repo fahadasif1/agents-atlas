@@ -107,7 +107,7 @@ function regionTotals() {
 }
 
 /* ---------- routing ---------- */
-function show(id) { $("#navMap").classList.toggle("on", id === "mapView"); $("#navUk").classList.toggle("on", id === "ukView");  for (const v of document.querySelectorAll(".view")) v.hidden = v.id !== id; closeDrawer(); }
+function show(id) { $("#navMap").classList.toggle("on", id === "mapView"); $("#navUk").classList.toggle("on", id === "ukView"); $("#navPk").classList.toggle("on", id === "pkView");  for (const v of document.querySelectorAll(".view")) v.hidden = v.id !== id; closeDrawer(); }
 function crumbs(parts) { const c = $("#crumbs"); c.innerHTML = "";
   parts.forEach((p, i) => { if (i) c.append(el("span", { class: "sep" }, "›")); c.append(p.href ? el("a", { href: p.href }, p.label) : el("span", { class: "cur" }, p.label)); }); }
 window.__atlas = { el, getJSON, safeUrl, store, fmt, toast: m => toast(m), csvCell: v => csvCell(v) };
@@ -116,7 +116,8 @@ function route() {
   const h = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
   const [kind, ...rest] = h.split("/"); const name = rest.join("/");
   if (kind === "progress") { show("progressView"); crumbs([{ label: "Map", href: "#/map" }, { label: "Progress" }]); renderProgress(); }
-  else if (kind === "uk") { show("ukView"); crumbs([{ label: "UK map" }]); window.UKMAP.open(); }
+  else if (kind === "uk") { show("ukView"); crumbs([{ label: "UK map" }]); window.COUNTRYMAPS.uk.open(); }
+  else if (kind === "pk") { show("pkView"); crumbs([{ label: "Pakistan map" }]); window.COUNTRYMAPS.pk.open(); }
   else if (kind === "map") { show("mapView"); crumbs([{ label: "Map" }]); renderMapView(); }
   else if (kind === "r" && name) { openScope({ type: "region", name }); }
   else if (kind === "c" && S.byCountry.has(name)) { openScope({ type: "country", name }); }
