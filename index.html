@@ -16,9 +16,11 @@
 </head>
 <body class="locked">
 <header class="top">
-  <a class="brand" href="#/uk"><span class="logo"></span><b>Agents</b><span class="dim">Atlas</span></a>
+  <a class="brand" href="#/map"><span class="logo"></span><b>Agents</b><span class="dim">Atlas</span></a>
   <div id="crumbs" class="crumbs"></div>
   <div class="top-actions">
+    <a class="btn ghost" id="navMap" href="#/map">World map</a>
+    <a class="btn ghost" id="navUk" href="#/uk">UK map</a>
     <a class="btn ghost" href="#/progress">Progress</a>
     <span id="syncpill" class="pill" title="Where your status/notes are saved"></span>
     <button id="lockBtn" class="btn ghost" title="Lock and forget the key on this device">Lock</button>
@@ -101,7 +103,7 @@
     <div class="stage">
       <div id="mapWrap" class="mapwrap"><svg id="map" role="img" aria-label="World map of agent counts by country"></svg>
         <div class="legend" id="legend"></div>
-        <div class="maptools"><button class="btn small" id="resetZoom">Reset view</button></div>
+        <div class="maptools"><a class="btn small primary" href="#/uk">UK map →</a> <button class="btn small" id="resetZoom">Reset view</button></div>
       </div>
       <div id="tip" class="tip" hidden></div>
     </div>
